@@ -1,0 +1,30 @@
+{
+  "env": {
+    "node": true,
+    "phantomjs": true,
+    "browser": true
+  },
+  "plugins": [
+  ],
+  "ecmaFeatures": {
+  },
+  "rules": {
+    // Disabled
+    "quotes": 0,
+    "strict": 0,
+    "no-extend-native": 0,
+    "new-cap": 0,
+    "no-underscore-dangle": 0,
+    "camelcase": 0
+    // Custom
+    //"no-unused-vars": [1, {"args": "none"}],
+    // Warnings
+
+    // Errors
+
+  },
+  "globals": {
+    "module": true,
+    "requireMain": true
+  }
+}
