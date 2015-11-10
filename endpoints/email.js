@@ -24,7 +24,12 @@ module.exports = {
           text: req.body.content || 'content'
         };
         console.log(mailObj);
-        mailer.sendMail(mailObj);
+        mailer.sendMail(mailObj, function(error, info) {
+          if(error){
+              return console.log(error);
+          }
+          console.log('Message sent: ' + info.response);
+        });
       });
       res.render('sendPost');
     })
