@@ -17,12 +17,14 @@ module.exports = {
       res.locals.list = users;
 
       _.each(users, function(user) {
-        mailer.sendMail({
+        var mailObj = {
           from: 'test@osma.net',
           to: user.email,
           subject: req.body.subject || 'subject',
           text: req.body.content || 'content'
-        });
+        };
+        console.log(mailObj);
+        mailer.sendMail(mailObj);
       });
       res.render('sendPost');
     })

@@ -7,7 +7,7 @@ var bodyParser = require('body-parser');
 var email = require("./endpoints/email");
 
 var app = express();
-var urlencodedParser = bodyParser.urlencoded({ extended: false })
+var urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 
 /*
