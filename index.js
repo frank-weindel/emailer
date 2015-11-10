@@ -22,7 +22,8 @@ app.use('/static', express.static(path.resolve(__dirname, './static')));
 /*
   Rounting
  */
-app.get('/send', email.send);
+app.get('/send', email.sendGet);
+app.post('/send', email.sendPost);
 app.get('/list', email.list);
 
 //app.get('/email/send', endpoints.email.send);

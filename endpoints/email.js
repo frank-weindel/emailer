@@ -5,7 +5,7 @@ var data = require('../modules/data');
 var mailer = require('../modules/mailer');
 
 module.exports = {
-  send: function(req, res) {
+  sendGet: function(req, res) {
     res.locals.sendPageActive = 'active';
     res.render('send');
 
@@ -28,6 +28,9 @@ module.exports = {
     });
 
 
+  },
+  sendPost: function(req, res) {
+    res.render('send');
   },
   list: function(req, res) {
     res.locals.listPageActive = 'active';
