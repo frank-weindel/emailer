@@ -8,29 +8,24 @@ module.exports = {
   sendGet: function(req, res) {
     res.locals.sendPageActive = 'active';
     res.render('send');
-
-
+  },
+  sendPost: function(req, res) {
+    res.locals.list = [];
     data.getUsers(config.groupList, function(err, users) {
       if (err) throw err;
 
+      res.locals.list = users;
+
       _.each(users, function(user) {
-        console.log('Listed ' + user.email + '... ')
-        // console.log('Emailing ' + user.email + '... ')
-        // mailer.sendMail({
-        //   from: 'test@osma.net',
-        //   to: user.email,
-        //   subject: 'hello',
-        //   text: 'hello world!'
-        // });
+        mailer.sendMail({
+          from: 'test@osma.net',
+          to: user.email,
+          subject: req.body.subject || 'subject',
+          text: req.body.content || 'content'
+        });
       });
-
-
-    });
-
-
-  },
-  sendPost: function(req, res) {
-    res.render('send');
+      res.render('sendPost');
+    })
   },
   list: function(req, res) {
     res.locals.listPageActive = 'active';

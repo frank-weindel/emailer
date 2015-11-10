@@ -3,10 +3,11 @@ global.requireMain = require.main.require;
 var express = require('express');
 var _ = require('underscore');
 var path = require('path');
+var bodyParser = require('body-parser');
 var email = require("./endpoints/email");
 
 var app = express();
-
+var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
 
 /*
@@ -23,7 +24,7 @@ app.use('/static', express.static(path.resolve(__dirname, './static')));
   Rounting
  */
 app.get('/send', email.sendGet);
-app.post('/send', email.sendPost);
+app.post('/send', [urlencodedParser], email.sendPost);
 app.get('/list', email.list);
 
 //app.get('/email/send', endpoints.email.send);
