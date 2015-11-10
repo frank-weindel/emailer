@@ -18,7 +18,7 @@ module.exports = {
 
       _.each(users, function(user) {
         var mailObj = {
-          from: 'test@osma.net',
+          from: 'secretary@osma.net',
           to: user.email,
           subject: req.body.subject || 'subject',
           text: req.body.content || 'content'

@@ -28,10 +28,10 @@ app.post('/send', [urlencodedParser], email.sendPost);
 app.get('/list', email.list);
 
 //app.get('/email/send', endpoints.email.send);
+var port = 8085;
 
-
-app.listen(8085, function() {
-  console.log('%s listening at %s', app.name, app.url);
+app.listen(port, function() {
+  console.log('%s listening at %s port %s', app.name, app.url, port);
 });
 
 
