@@ -1,5 +1,6 @@
 var config = requireMain('./config');
 var express = require('express');
+var async = require('async');
 var _ = require('underscore');
 var data = require('../modules/data');
 var mailer = require('../modules/mailer');
@@ -16,22 +17,30 @@ module.exports = {
 
       res.locals.list = users;
 
-      _.each(users, function(user) {
-        var mailObj = {
-          from: 'secretary@osma.net',
-          to: user.email,
-          subject: req.body.subject || 'subject',
-          text: req.body.content || 'content'
-        };
-        console.log(mailObj);
-        mailer.sendMail(mailObj, function(error, info) {
-          if(error){
-              return console.log(error);
-          }
-          console.log('Message sent: ' + info.response);
-        });
-      });
-      res.render('sendPost');
+      async.map(users,
+        function(user, cb) {
+          var mailObj = {
+            from: 'secretary@osma.net',
+            to: user.email,
+            subject: req.body.subject || 'subject',
+            text: req.body.content || 'content'
+          };
+          console.log(mailObj);
+          mailer.sendMail(mailObj, function(error, info) {
+            if(error){
+              user.result = 'Failed.';
+              cb(error, info);
+              return;
+            }
+            user.result = 'Sent.';
+            console.log('Message sent: ' + info.response);
+            cb(null, info);
+          });
+        },
+        function() {
+          res.render('sendPost');
+        }
+      );
     })
   },
   list: function(req, res) {
