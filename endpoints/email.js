@@ -5,6 +5,10 @@ var _ = require('underscore');
 var data = require('../modules/data');
 var mailer = require('../modules/mailer');
 
+var curProgress = {
+
+};
+
 module.exports = {
   sendGet: function(req, res) {
     res.locals.sendPageActive = 'active';
@@ -17,6 +21,13 @@ module.exports = {
 
       res.locals.list = users;
 
+      /*
+        Reset progress of all emails to false
+       */
+      _.map(users, function(user) {
+        curProgress[user.email] = 'pending';
+      });
+
       async.map(users,
         function(user, cb) {
           var mailObj = {
@@ -28,17 +39,17 @@ module.exports = {
           console.log(mailObj);
           mailer.sendMail(mailObj, function(error, info) {
             if(error){
-              user.result = 'Failed.';
+              curProgress[user.email] = 'failed';
               cb(error, info);
               return;
             }
-            user.result = 'Sent.';
+            curProgress[user.email] = 'sent';
             console.log('Message sent: ' + info.response);
             cb(null, info);
           });
         },
         function() {
-          res.render('sendPost');
+          res.redirect('/list');
         }
       );
     })
@@ -47,11 +58,26 @@ module.exports = {
     res.locals.listPageActive = 'active';
     data.getUsers(config.groupList, function(err, users) {
       if (err) throw err;
-
-      res.locals.list = users;
-      console.log(users);
+      res.locals.count = users.length;
+      res.locals.list = _.map(users, function(user) {
+        user.result = curProgress[user.email] || 'not sent';
+        return user;
+      });
       res.render('list');
-
+    });
+  },
+  listCsv: function(req, res) {
+    data.getUsers(config.groupList, function(err, users) {
+      if (err) throw err;
+      res.writeHead(200, {
+        // 'Content-Length': image.length,
+        'Content-Type': 'text/csv'
+      });
+      res.locals.count = users.length;
+      res.locals.list = users;
+      res.render('listCsv', {
+        layout: false
+      });
     });
   }
 };

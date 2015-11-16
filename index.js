@@ -1,9 +1,10 @@
-global.requireMain = require.main.require;
+global.requireMain = require;
 
 var express = require('express');
 var _ = require('underscore');
 var path = require('path');
 var bodyParser = require('body-parser');
+var auth = require('./middleware/auth');
 var email = require("./endpoints/email");
 
 var app = express();
@@ -17,15 +18,17 @@ app.engine('html', require('hogan-express'));
 app.set('view engine', 'html');
 app.set('layout', 'layout');
 app.set('views', path.resolve(__dirname, './views'));
+app.use(auth);
 app.use('/static', express.static(path.resolve(__dirname, './static')));
 // app.use(cookieParser());
 
 /*
   Rounting
  */
-app.get('/send', email.sendGet);
+app.get('/', email.sendGet);
 app.post('/send', [urlencodedParser], email.sendPost);
 app.get('/list', email.list);
+app.get('/list.csv', email.listCsv);
 
 //app.get('/email/send', endpoints.email.send);
 var port = 8085;

@@ -1,7 +1,11 @@
 var config = requireMain('./config');
 var mysql = require('mysql');
 
-var connection = mysql.createConnection(config);
-connection.connect();
-
-module.exports = connection;
+module.exports = mysql.createPool({
+  connectionLimit: 10,
+  host: config.host,
+  port: config.port,
+  user: config.user,
+  password: config.password,
+  database: config.database
+});
